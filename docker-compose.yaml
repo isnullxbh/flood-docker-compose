@@ -1,0 +1,29 @@
+volumes:
+  flood-config:
+
+services:
+  flood:
+    image: jesec/flood
+    user: 1000:1000 # EDIT ME
+    restart: unless-stopped
+    command: --port 3001 --allowedpath /data
+    environment:
+      HOME: /config
+    volumes:
+      - flood-config:/config
+      - /mnt/nas-media:/data # EDIT ME
+    ports:
+      - 3001:3001
+
+  rtorrent:
+    image: jesec/rtorrent
+    user: 1000:1000 # EDIT ME
+    restart: unless-stopped
+    command: -o network.port_range.set=6881-6881,system.daemon.set=true
+    environment:
+      HOME: /config
+    volumes:
+      - flood-config:/config
+      - /mnt/nas-media:/data # EDIT ME
+    ports:
+      - 6881:6881
